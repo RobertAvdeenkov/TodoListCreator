@@ -1,5 +1,5 @@
 fastapi
-jose
+python-jose==3.3.0
 sqlalchemy
 passlib
 python-multipart
