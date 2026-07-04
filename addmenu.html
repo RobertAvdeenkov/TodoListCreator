@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Меню создания</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <h2>Меню создания задачи</h2>
+</body>
+
+<body>
+    <hr style="margin: 30px 0;">
+</body>
+
+<p>
+    <div id="message"></div>
+    Введите название задачи: <br /> 
+    <input id="enter" />
+</p>
+<button onclick="entere()">Создать</button>
+<script>
+    async function entere() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const name = document.getElementById('enter').value;
+
+        const response = await fetch("/dobav", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json", 'Authorization':'Bearer '+token},
+            body: JSON.stringify({'token':token, 'name':name})
+        });
+        console.log(name)
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("message").textContent = data.message;
+        } else {
+            console.log(response);
+        }
+    }
+</script>

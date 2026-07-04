@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration/login</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <h3>Здравствуйте! Для продолжения необходимо пройти регистрацию!</h3>
+</body>
+<body>
+    <div id="message"></div>
+     <p>
+        Введите логин: <br /> 
+        <input name="username" id="username" />
+    </p>
+     <p>
+        Введите пароль: <br /> 
+        <input name="userage" id="userage"/>
+    </p>
+    <button onclick="send()">Логин</button>
+<script>
+
+async function send() {
+    // 1. СНАЧАЛА получаем значения из полей
+    const name = document.getElementById('username').value;
+    const age = document.getElementById('userage').value;
+
+    // 2. Проверяем, что поля не пустые
+    if (!name || !age) {
+        alert('Заполните все поля!');
+        return;
+    }
+
+    // 3. ПОТОМ отправляем запрос
+    try {
+        const response = await fetch('/reglog', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'name':name, 'age':age})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            window.location.href = data.redirect_url;
+        } else {
+            const error = await response.json();
+            alert(error.detail || 'Ошибка авторизации');
+        }
+    } catch (e) {
+        ;
+    }
+}
+</script>
+</body>
+</html>

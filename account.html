@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TodoListCreator</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <h2>Добро пожаловать в TodoListCreator</h2>
+</body>
+
+<body>
+    <hr style="margin: 30px 0;">
+</body>
+
+<body>
+
+    <button onclick="sendAdd()">Добавить задачу</button>
+    <p></p>
+    <button onclick="update()">Обновить задачу</button>
+    <p></p>
+    <button onclick="sendDelete()">Удалить задачу</button>
+    <p></p>
+    <button onclick="entere()">Список задач</button>
+    <p></p>
+    <body>
+        <hr style="margin: 30px 0;">
+    </body>
+
+    <script>
+        // Функция для ДОБАВЛЕНИЯ задачи
+        async function sendAdd() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            const response = await fetch("/add", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json", 'Authorization':'Bearer '+token},
+                body: JSON.stringify({'token':token})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                window.location.href = data.redirect_url;
+            } else {
+                console.log(response);
+            }
+        }
+
+        // Функция для УДАЛЕНИЯ задачи
+        async function sendDelete() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            console.log('TESTING')
+
+            const response = await fetch("/delete", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json", 'Authorization':'Bearer '+token},
+                body: JSON.stringify({'token':token})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                window.location.href = data.redirect_url;
+            } else {
+                console.log(response);
+            }
+        }
+
+        async function entere() {
+                // 1. СНАЧАЛА получаем значения из полей
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+
+    // 3. ПОТОМ отправляем запрос
+            try {
+                const response = await fetch('/list', {
+                method: 'POST',
+                    headers: {
+                        "Accept": "application/json",'Content-Type': 'application/json', 'Authorization':'Bearer '+token
+                    },
+                    body: JSON.stringify({'token':token})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.redirect_url;
+                } else {
+                    const error = await response.json();
+                    alert(error.detail || 'Ошибка авторизации');
+                }
+            } catch (e) {
+                ;
+            }
+        }
+
+        async function update() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            const response = await fetch("/update", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json", 'Authorization':'Bearer '+token},
+                body: JSON.stringify({'token':token})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                window.location.href = data.redirect_url;
+            } else {
+                console.log(response);
+            }
+        }
+
+    </script>
+</body>
+<p>
+
+</p>
+</html>

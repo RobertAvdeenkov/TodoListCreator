@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Меню обновления задач</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <h3>Меню обновления задач</h3>
+</body>
+<body>
+    <div id="message"></div>
+     <p>
+        Введите текущее название задачи: <br /> 
+        <input name="username" id="username" />
+    </p>
+     <p>
+        Введите новое название задачи: <br /> 
+        <input name="userage" id="userage"/>
+    </p>
+    <button onclick="send()">Принять</button>
+<script>
+
+async function send() {
+    // 1. СНАЧАЛА получаем значения из полей
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token')
+    const name = document.getElementById('username').value;
+    const age = document.getElementById('userage').value;
+
+    // 3. ПОТОМ отправляем запрос
+    try {
+        const response = await fetch('/updating', {
+            method: 'POST',
+            headers: { "Accept": "application/json", "Content-Type": "application/json", 'Authorization':'Bearer '+token},
+            body: JSON.stringify({'name':name, 'new':age, 'token':token})
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById("message").textContent = data.message;
+        } else {
+            const error = await response.json();
+            alert(error.detail || 'Ошибка авторизации');
+        }
+    } catch (e) {
+        ;
+    }
+}
+</script>
+</body>
+</html>
